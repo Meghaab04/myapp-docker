@@ -4,41 +4,29 @@ node {
    stage('Checkout Code') { 
       git 'https://github.com/maping/java-maven-calculator-web-app.git'
    }
-   stage('JUnit Test') {
-      if (isUnix()) {
-         sh "'${mvnHome}/bin/mvn' clean test"
-      } else {
-         bat(/"${mvnHome}\bin\mvn" clean test/)
-      }
+
+   stage('Build & Unit Test') {
+      sh "'${mvnHome}/bin/mvn' clean package"
    }
+
    stage('Integration Test') {
-      if (isUnix()) {
-         sh "'${mvnHome}/bin/mvn' integration-test"
-      } else {
-         bat(/"${mvnHome}\bin\mvn" integration-test/)
-      }
+      sh "'${mvnHome}/bin/mvn' integration-test"
    }
- /*
-   stage('Performance Test') {
-      if (isUnix()) {
-         sh "'${mvnHome}/bin/mvn' cargo:start verify cargo:stop"
-      } else {
-         bat(/"${mvnHome}\bin\mvn" cargo:start verify cargo:stop/)
-      }
+
+   stage('Verify') {
+      sh "'${mvnHome}/bin/mvn' verify"
    }
-  */
-  stage('Performance Test') {
-      if (isUnix()) {
-         sh "'${mvnHome}/bin/mvn' verify"
-      } else {
-         bat(/"${mvnHome}\bin\mvn" verify/)
-      }
+
+   stage('Build Docker Image') {
+      sh 'docker build -t calculator-app .'
    }
+
    stage('Deploy') {
       timeout(time: 10, unit: 'MINUTES') {
            input message: 'Deploy this web app to production ?'
       }
-      echo 'Deploy...'
+
+      sh 'docker rm -f calculator-container || true'
+      sh 'docker run -d -p 8080:8080 --name calculator-container calculator-app'
    }
 }
-   
