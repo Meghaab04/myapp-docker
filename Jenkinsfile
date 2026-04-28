@@ -1,6 +1,6 @@
 node {
     stage('Checkout') {
-        git 'https://github.com/YOUR_USERNAME/myapp-docker.git'
+        git 'https://github.com/Meghaab04/myapp-docker.git'
     }
 
     stage('Build') {
