@@ -5,7 +5,7 @@ node {
     }
 
     stage('Checkout') {
-        git 'https://github.com/Meghaab04/myapp-docker.git'
+        git branch: 'main', url: 'https://github.com/Meghaab04/myapp-docker.git'
     }
 
     stage('Build') {
