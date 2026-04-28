@@ -19,6 +19,5 @@ node {
     stage('Run Container') {
     sh 'docker rm -f myapp-container || true'
     sh 'docker run -d -p 8080:8080 --name myapp-container myapp'
-}
     }
 }
