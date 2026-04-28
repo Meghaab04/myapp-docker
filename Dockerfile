@@ -1,5 +1,7 @@
-FROM tomcat
-MAINTAINER Ma Ping
+FROM openjdk:17-jdk-slim
 
-RUN rm -rf $CATALINA_HOME/webapps/ROOT
-COPY target/calculator.war $CATALINA_HOME/webapps/ROOT.war
+WORKDIR /app
+
+COPY target/myapp-1.0.jar app.jar
+
+CMD ["java", "-jar", "app.jar"]
