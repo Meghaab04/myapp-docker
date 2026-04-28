@@ -1,12 +1,19 @@
 package com.example;
 
-public class App {
-    public static void main(String[] args) throws Exception {
-        System.out.println("Application started!");
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.*;
 
-        while (true) {
-            System.out.println("Running...");
-            Thread.sleep(5000);
-        }
+@SpringBootApplication
+@RestController
+public class App {
+
+    public static void main(String[] args) {
+        SpringApplication.run(App.class, args);
+    }
+
+    @GetMapping("/")
+    public String home() {
+        return "Hello from Jenkins + Docker 🚀";
     }
 }
