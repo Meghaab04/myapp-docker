@@ -1,4 +1,9 @@
 node {
+
+    stage('Clean Workspace') {
+        deleteDir()
+    }
+
     stage('Checkout') {
         git 'https://github.com/Meghaab04/myapp-docker.git'
     }
