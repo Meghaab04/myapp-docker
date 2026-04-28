@@ -1,32 +1,18 @@
 node {
-   def mvnHome = tool 'M3'
+    stage('Checkout') {
+        git 'https://github.com/YOUR_USERNAME/myapp-docker.git'
+    }
 
-   stage('Checkout Code') { 
-      git 'https://github.com/maping/java-maven-calculator-web-app.git'
-   }
+    stage('Build') {
+        sh 'mvn clean package'
+    }
 
-   stage('Build & Unit Test') {
-      sh "'${mvnHome}/bin/mvn' clean package"
-   }
+    stage('Build Docker Image') {
+        sh 'docker build -t myapp .'
+    }
 
-   stage('Integration Test') {
-      sh "'${mvnHome}/bin/mvn' integration-test"
-   }
-
-   stage('Verify') {
-      sh "'${mvnHome}/bin/mvn' verify"
-   }
-
-   stage('Build Docker Image') {
-      sh 'docker build -t calculator-app .'
-   }
-
-   stage('Deploy') {
-      timeout(time: 10, unit: 'MINUTES') {
-           input message: 'Deploy this web app to production ?'
-      }
-
-      sh 'docker rm -f calculator-container || true'
-      sh 'docker run -d -p 8080:8080 --name calculator-container calculator-app'
-   }
+    stage('Run Container') {
+        sh 'docker rm -f myapp-container || true'
+        sh 'docker run -d --name myapp-container myapp'
+    }
 }
